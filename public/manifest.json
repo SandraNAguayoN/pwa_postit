@@ -31,8 +31,8 @@
       "type": "image/png"
     }
   ],
-  "background_color": "#EEE",
-  "theme_color": "#1565c0",
+  "background_color": "#FAFAFA",
+  "theme_color": "#8C0000",
   "start_url": "./?utm_source=web_app_manifest",
   "display": "standalone",
   "orientation": "any",
