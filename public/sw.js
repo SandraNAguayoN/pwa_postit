@@ -9,6 +9,10 @@ const CACHE_INMUTABLE_NAME = "postit-inmutable-v1";
 const APP_SHELL = [
     //Rutas
     "/",
+    "index.html",
+    "pages/mensajes.html",
+    "pages/fotos.html",
+    "pages/geolocalizacion.html",
 
     //Css
     "css/style.css",
@@ -122,17 +126,18 @@ self.addEventListener("fetch", (evento) => {
 
     }else{
 
+        //Estrategia cache first
         respuesta = caches.match(evento.request).then((res) => {
             if (res) {
                 verificarCache(CACHE_STATIC_NAME, evento.request, APP_SHELL_INMUTABLE);
                 return res;
 
             } else {
-                return fetch(evento.request).then((newRes) => {
+                return fetch(evento.request).then((newRes) => { //Ese elemento no existe en caché y debemos traerlo de la red
                     return actualizaCache(CACHE_DYNAMIC_NAME, evento.request, newRes);
                 });
             }
-    });
+        });
     }
 
     evento.respondWith(respuesta);
@@ -148,8 +153,8 @@ self.addEventListener("sync", evento => {
     }
 } );
 
-// NOTIFICACIONES
 
+// NOTIFICACIONES
 self.addEventListener('push', e => {
 
     const data = JSON.parse( e.data.text() );

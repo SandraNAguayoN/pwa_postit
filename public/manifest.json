@@ -1,7 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/web-manifest",
-  "short_name": "PostIt",
-  "name": "Postéalo",
+  "short_name": "Post It!",
+  "name": "¡Postéalo!",
   "description": "description",
   "scope": "/",
   "icons": [
