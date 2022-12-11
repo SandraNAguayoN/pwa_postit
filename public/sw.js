@@ -98,13 +98,13 @@ self.addEventListener("install", (evento) => {
 self.addEventListener("activate", (evento) => {
     const respuesta = caches.keys().then((llaves) => {
         llaves.forEach((llave) => {
-            if (llave !== CACHE_STATIC_NAME && llave.includes("static")) {
-                return caches.delete(llave);
-            }
+        if (llave !== CACHE_STATIC_NAME && llave.includes("static")) {
+            return caches.delete(llave);
+        }
 
-            if (llave !== CACHE_DYNAMIC_NAME && llave.includes("dynamic")) {
-                return caches.delete(llave);
-            }
+        if (llave !== CACHE_DYNAMIC_NAME && llave.includes("dynamic")) {
+            return caches.delete(llave);
+        }
         });
     });
 
@@ -114,10 +114,11 @@ self.addEventListener("activate", (evento) => {
 self.addEventListener("fetch", (evento) => {
 
     let respuesta;
+    if( evento.request.url.includes("/api") ){
 
-    if (evento.request.url.includes("/api")) {
         respuesta = manejarPeticionesApi(CACHE_DYNAMIC_NAME, evento.request);
-    } else {
+
+    }else{
 
         respuesta = caches.match(evento.request).then((res) => {
             if (res) {
@@ -129,21 +130,89 @@ self.addEventListener("fetch", (evento) => {
                     return actualizaCache(CACHE_DYNAMIC_NAME, evento.request, newRes);
                 });
             }
-        });
-
+    });
     }
 
     evento.respondWith(respuesta);
 });
 
+
 self.addEventListener("sync", evento => {
-    console.log("SW: Sync");
+    //console.log("SW: Sync");
 
-    if (evento.tag === "nuevo-mensaje") {
+    if( evento.tag === "nuevo-mensaje"){
         const respuesta = enviarMensajes();
-
-        evento.waitUntil(respuesta);
+        evento.waitUntil( respuesta );
     }
+} );
+
+// NOTIFICACIONES
+
+self.addEventListener('push', e => {
+
+    const data = JSON.parse( e.data.text() );
+
+    const title = data.titulo;
+    const options = {
+        body: data.cuerpo,       
+        icon: `img/christmas-icons/${ data.usuario }.png`,
+        badge: 'img/favicon.ico',
+        image: 'https://as01.epimg.net/meristation/imagenes/2022/09/09/reportajes/1662739276_405887_1662795061_noticia_normal_recorte1.jpg',
+        vibrate: [125,75,125,275,200,275,125,75,125,275,200,600,200,600],
+        openUrl: '/',
+        data: {            
+            url: '/',
+            id: data.usuario
+        },
+        // accciones personalizadas: editar, eliminar o lo que se requiera
+        actions: [
+            {
+                action: 'star-action',
+                title: 'Star',
+                icon: 'img/christmas-icons/star.png'
+            },
+            {
+                action: 'candy-1-action',
+                title: 'Candy 1',
+                icon: 'img/christmas-icons/candy-1.png'
+            }
+        ]
+    };
+
+    e.waitUntil( self.registration.showNotification( title, options) );
 });
 
 
+// Evento para cerrar la notificacion
+self.addEventListener('notificationclose', e => {
+    console.log('Notificación cerrada', e);
+});
+
+// Evento cuando se da clic sobre la notificacion
+self.addEventListener('notificationclick', e => {
+    // Para tener una mejor refrencia a las opcion de las notificaciones
+    const notificacion = e.notification;
+    const accion = e.action;
+
+    console.log({ notificacion, accion });
+
+    // obtiene todas las pestañas abiertas en el navegador
+    const respuesta = clients.matchAll()
+        .then( clientes => {
+
+            let cliente = clientes.find( c => {
+                return c.visibilityState === 'visible';
+            });
+
+            if ( cliente !== undefined ) {
+                cliente.navigate( notificacion.data.url );
+                cliente.focus();
+            } else {
+                clients.openWindow( notificacion.data.url );
+            }
+
+            return notificacion.close();
+        });
+
+    e.waitUntil( respuesta );
+});

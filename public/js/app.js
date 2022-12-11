@@ -5,7 +5,16 @@ if (navigator.serviceWorker) {
     if (url.includes('localhost')) {
         swLocation = '/sw.js';
     }
-    navigator.serviceWorker.register(swLocation);
+
+    window.addEventListener('load', () => {
+
+        navigator.serviceWorker.register( swLocation ).then( reg => {
+            swReg = reg;
+            swReg.pushManager.getSubscription().then( verificaSuscripcion );
+
+        });
+
+    });
 }
 
 // Referencias de jQuery
@@ -406,6 +415,128 @@ btnTomarFoto.on("click", () => {
     console.log(foto);
     camara.apagar();
 });
+
+
+//NOTIFICACIONES
+var btnActivadas    = $('.btn-noti-activadas');
+var btnDesactivadas = $('.btn-noti-desactivadas');
+
+function notificarme() {
+
+    // Verificar si el navegador soporta notificaciones
+    if ( !window.Notification ) {
+        console.log('Este navegador no soporta notificaciones');
+        return;
+    }
+
+    // Se verifica si ya se tiene permiso para enviar notificaciones
+    // existen 3 opciones: granted : se autorizo el permiso para enviar notificaciones, 
+    // denied: se denego el permiso aoara enviar notificaciones, default : valor por default
+    if ( Notification.permission === 'granted' ) {
+        
+        enviarNotificacion();
+
+    } else if ( Notification.permission !== 'denied' || Notification.permission === 'default' )  {
+
+        // Se le pide autorizacion al usuario para enviar notificaciones
+        Notification.requestPermission( function( permission ) {
+
+            console.log( "Permiso otorgado:", permission );
+
+            // El usuario si acepto el envio de notifcaciones
+            if ( permission === 'granted' ) {
+                console.log("Si hay permiso");
+                enviarNotificacion();
+            }
+
+        });
+
+    }
+}
+
+//notificarme();
+
+function enviarNotificacion() {
+
+    const notificationOpts = {
+        body: 'Este es el cuerpo de la notificación',
+        icon: 'img/icons/72x72.png'
+    };
+
+    const n = new Notification('Hola Mundo', notificationOpts);
+
+    // Por si se requiere realizar una acción cuando se de clic sobre la notificación
+    n.onclick = () => {
+        console.log('Le diste clic a la notificación');
+    };
+
+}
+
+function verificaSuscripcion( activadas ) {
+
+    // Verificar el estatus para ver que boton se tiene que activar
+    if ( activadas ) {
+        btnActivadas.removeClass('oculto');
+        btnDesactivadas.addClass('oculto');
+
+    } else {
+        btnActivadas.addClass('oculto');
+        btnDesactivadas.removeClass('oculto');
+    }
+
+}
+
+//verificaSuscripcion();
+
+function getPublicKey() {
+
+    return fetch('api/key')
+        .then( res => res.arrayBuffer())
+        // returnar arreglo, pero como un Uint8array
+        .then( key => new Uint8Array(key) );
+
+
+}
+
+
+btnDesactivadas.on( 'click', () => {
+
+    // verificar si ya se registro el service worker
+    if ( !swReg ) return console.log('No hay registro de SW');
+
+    getPublicKey().then( key => {
+
+        // Realizar la subscripcion del service worker
+        swReg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: key
+        })
+        .then( res => res.toJSON() )
+        .then( suscripcion => {
+
+            // Enviar la subscripion al servidor 
+            fetch('api/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify( suscripcion )
+            })
+            .then( verificaSuscripcion )
+            .catch( cancelarSuscripcion );
+
+        });
+    });
+});
+
+btnActivadas.on( 'click', function() {
+    cancelarSuscripcion();
+});
+
+function cancelarSuscripcion() {
+    swReg.pushManager.getSubscription().then( subs => {
+        subs.unsubscribe().then( () => verificaSuscripcion(false) );
+    });
+}
+
 
 
 function verificarConexion() {
