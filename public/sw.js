@@ -66,9 +66,9 @@ const APP_SHELL = [
     "js/app.js",
     "js/sw-utils.js",
     "js/sw-db.js",
-    //"js/snow.js",
+    "js/snow.js",
     "js/camara-class.js",
-    "js/pouchdb-7.3.1.min.js"
+    "js/pouchdb-7.3.1.min.js",
 ];
 
 const APP_SHELL_INMUTABLE = [

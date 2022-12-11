@@ -28,6 +28,9 @@ function manejarPeticionesApi(nombreCache, req){
 
         return fetch( req );
 
+    }else if ( (req.url.indexOf('/api/push') >= 0 )) {
+        return push( req );
+        
     }else if(req.clone().method === "POST"){
 
         if( self.registration.sync ){

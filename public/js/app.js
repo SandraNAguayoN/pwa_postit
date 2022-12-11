@@ -42,8 +42,32 @@ var contenidoIconos = $("#contenido-iconos");
 var usuario;
 
 //==================FUNCIONES=======================
+
+// Boton de enviar sólo foto
+function  mostrarNotificacionMensaje(mensaje, usuario) {
+    var dataNot = {
+        titulo: "Nuevo mensaje de usuario: "+ usuario,
+        cuerpo: mensaje,
+        usuario: usuario
+    }
+
+    fetch("/api/push", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataNot)
+    })
+        .then(res => res.json())
+        .then(res => console.log("Funciona notificación: ", res))
+        .catch(error => console.log("Falla notificación: ", error));
+
+}
+
+
 function crearMensajeHTML(mensaje, personaje) {
 
+    if(mensaje != undefined && personaje != undefined){
     var content = `
     <li class="animated fadeIn fast"
         data-user="${personaje}"
@@ -64,14 +88,17 @@ function crearMensajeHTML(mensaje, personaje) {
         </div>
     </li>
     `;
+    
 
     timelineMensajes.prepend(content);
     cancelarBtn.click();
+    }
 
 }
 
 function crearMensajeFotoHTML(mensaje, personaje, foto) {
 
+    if(mensaje != undefined && personaje != undefined){
     var content = `
     <li class="animated fadeIn fast"
         data-user="${personaje}"
@@ -88,6 +115,7 @@ function crearMensajeFotoHTML(mensaje, personaje, foto) {
                 <br/>
                 <p class="texto-verde">${mensaje}</p>
                 `;
+    
 
     if (foto) {
         content += `
@@ -105,32 +133,33 @@ function crearMensajeFotoHTML(mensaje, personaje, foto) {
 
     timelineFotos.prepend(content);
     cancelarBtn.click();
+    }
 
 }
 
 function crearMensajeGeoHTML(mensaje, personaje, lat, lng) {
 
-    var content = `
-    <li class="animated fadeIn fast"
-        data-user="${personaje}"
-        data-mensaje="${mensaje}"
-        data-tipo="mensaje">
-
-
-        <div class="icono-mensaje">
-            <img src="../img/christmas-icons/${personaje}.png">
-        </div>
-        <div class="bubble-container">
-            <div class="bubble">
-                <h3 class="texto-rojo">@${personaje}</h3>
-                <br/>
-                <p class="texto-verde">${mensaje}</p>
-                </div>        
-                <div class="arrow"></div>
+    if(mensaje != undefined && personaje != undefined){
+        var content = `
+        <li class="animated fadeIn fast"
+            data-user="${personaje}"
+            data-mensaje="${mensaje}"
+            data-tipo="mensaje">
+    
+    
+            <div class="icono-mensaje">
+                <img src="../img/christmas-icons/${personaje}.png">
             </div>
-        </li>
-    `;
-
+            <div class="bubble-container">
+                <div class="bubble">
+                    <h3 class="texto-rojo">@${personaje}</h3>
+                    <br/>
+                    <p class="texto-verde">${mensaje}</p>
+                    </div>        
+                    <div class="arrow"></div>
+                </div>
+            </li>
+        `;
 
     // si existe la latitud y longitud, 
     // llamamos la funcion para crear el mapa
@@ -146,10 +175,8 @@ function crearMensajeGeoHTML(mensaje, personaje, lat, lng) {
 
     timelineGeos.prepend(content);
     cancelarBtn.click();
-
+    }
 }
-
-
 
 // Globals
 function logIn(ingreso) {
@@ -229,7 +256,7 @@ postMensajeBtn.on('click', function () {
         return;
     }
 
-    var data = {
+    var dataMensaje = {
         user: usuario,
         mensaje: mensaje
     }
@@ -239,13 +266,14 @@ postMensajeBtn.on('click', function () {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(dataMensaje)
     })
         .then(res => res.json())
         .then(res => console.log("Funciona: ", res))
         .catch(error => console.log("Falla: ", error));
 
     crearMensajeHTML(mensaje, usuario);
+    mostrarNotificacionMensaje(mensaje, usuario);
 
 });
 
@@ -258,7 +286,7 @@ postFotoBtn.on('click', function () {
         return;
     }
 
-    var data = {
+    var dataFoto = {
         user: usuario,
         mensaje: mensaje,
     }
@@ -268,13 +296,14 @@ postFotoBtn.on('click', function () {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(dataFoto)
     })
         .then(res => res.json())
         .then(res => console.log("Funciona: ", res))
         .catch(error => console.log("Falla: ", error));
 
     crearMensajeFotoHTML(mensaje, usuario, foto);
+    mostrarNotificacionMensaje(mensaje, usuario);
 
 });
 
@@ -287,7 +316,7 @@ postGeoBtn.on('click', function () {
         return;
     }
 
-    var data = {
+    var dataGeo = {
         user: usuario,
         mensaje: mensaje,
     }
@@ -297,14 +326,14 @@ postGeoBtn.on('click', function () {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(dataGeo)
     })
         .then(res => res.json())
         .then(res => console.log("Funciona: ", res))
         .catch(error => console.log("Falla: ", error));
 
     crearMensajeGeoHTML(mensaje, usuario, lat, lng);
-
+    mostrarNotificacionMensaje(mensaje, usuario);
 });
 
 function listarMensajes() {
@@ -454,16 +483,19 @@ function notificarme() {
     }
 }
 
-//notificarme();
+if (!url.includes('pages')) {
+    notificarme(); //Notificacion de prueba al iniciar la app
+}
+
 
 function enviarNotificacion() {
 
     const notificationOpts = {
-        body: 'Este es el cuerpo de la notificación',
+        body: 'Este es el inicio de la aplicación.',
         icon: 'img/icons/72x72.png'
     };
 
-    const n = new Notification('Hola Mundo', notificationOpts);
+    const n = new Notification('Bienvenido', notificationOpts);
 
     // Por si se requiere realizar una acción cuando se de clic sobre la notificación
     n.onclick = () => {
