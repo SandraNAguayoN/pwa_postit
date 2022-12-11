@@ -157,7 +157,7 @@ self.addEventListener('push', e => {
         body: data.cuerpo,       
         icon: `img/christmas-icons/${ data.usuario }.png`,
         badge: 'img/favicon.ico',
-        image: 'https://as01.epimg.net/meristation/imagenes/2022/09/09/reportajes/1662739276_405887_1662795061_noticia_normal_recorte1.jpg',
+        image: 'img/christmas-icons/notificaciones/notificaciones-1.png',
         vibrate: [125,75,125,275,200,275,125,75,125,275,200,600,200,600],
         openUrl: '/',
         data: {            
