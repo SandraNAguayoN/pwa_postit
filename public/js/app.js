@@ -410,9 +410,9 @@ btnTomarFoto.on("click", () => {
 
 function verificarConexion() {
     if (navigator.onLine) {
-        console.log("No hay conexión :(");
-    } else {
         console.log("Si hay conexión :)");
+    } else {
+        console.log("No hay conexión :(");
     }
 }
 

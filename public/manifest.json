@@ -36,6 +36,47 @@
   "start_url": "./?utm_source=web_app_manifest",
   "display": "standalone",
   "orientation": "any",
+  "shortcuts": [
+    {
+        "name":"mensajes",
+        "short_name": "Mensajes",
+        "description": "Enlace de mensajes",
+        "url": "pages/mensajes.html",
+        "icons": [
+            {
+                "src": "img/icons/144x144.png",
+                "sizes":"144x144"
+            }
+        ]
+
+    },
+    {
+      "name":"fotos",
+      "short_name": "Fotos",
+      "description": "Enlace de fotos",
+      "url": "pages/fotos.html",
+      "icons": [
+          {
+              "src": "img/icons/144x144.png",
+              "sizes":"144x144"
+          }
+      ]
+
+  },
+  {
+    "name":"geolocalizacion",
+    "short_name": "Geolocalización",
+    "description": "Enlace de geolocalización",
+    "url": "pages/geolocalizacion.html",
+    "icons": [
+        {
+            "src": "img/icons/144x144.png",
+            "sizes":"144x144"
+        }
+    ]
+
+}
+  ],
   "screenshots":[
     {
         "src":"img/icons/512x512.png",
