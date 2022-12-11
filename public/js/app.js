@@ -83,7 +83,7 @@ function crearMensajeFotoHTML(mensaje, personaje, foto) {
     if ( foto ) {
         content += `
                 <br>
-                <img class="foto-mensaje" src="${ foto }">
+                <img class="foto-mensaje" src="${ foto }" style="width: 300; height:300px;">
         `;
 
     }
@@ -307,9 +307,9 @@ function listarMensajes() {
             if(mensaje.foto == undefined && mensaje.lat == undefined && mensaje.lng == undefined){
                 crearMensajeHTML(mensaje.mensaje, mensaje.user); //Propiedades que tiene el objeto mensajes al ser convertido a json
             } else if (mensaje.foto != undefined){
-                crearMensajeFotoHTML(mensaje.mensaje, mensaje.user, mensaje.lat, mensaje.lng); //Propiedades que tiene el objeto mensajes al ser convertido a json
+                crearMensajeFotoHTML(mensaje.mensaje, mensaje.user, mensaje.foto); //Propiedades que tiene el objeto mensajes al ser convertido a json
             } else if (mensaje.lat != undefined && mensaje.lng != undefined){
-                crearMensajeGeoHTML(mensaje.mensaje, mensaje.user, mensaje.foto); //Propiedades que tiene el objeto mensajes al ser convertido a json
+                crearMensajeGeoHTML(mensaje.mensaje, mensaje.user, mensaje.lat, mensaje.lng); //Propiedades que tiene el objeto mensajes al ser convertido a json
             }
         });
     });

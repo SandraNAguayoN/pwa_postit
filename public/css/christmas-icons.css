@@ -116,6 +116,11 @@ textarea {
   bottom: 50px;
 }
 
+.fa-paper-plane {
+  margin-top: 20px;
+  margin-right: 5px;
+}
+
 .fab-marker {
   width: 50px;
   height: 50px;
@@ -148,7 +153,8 @@ textarea {
   line-height: 55px;
 
   position: fixed;
-  left: 80px;
+  /*left: 80px;*/
+  right: 100px;
   bottom: 50px;
 }
 

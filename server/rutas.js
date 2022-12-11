@@ -5,18 +5,21 @@ const mensajes = [
     {
         _id : "1",
         user : "boy",
-        mensaje : "Mensaje #1"   
+        mensaje : "Hola!"   
     },
     {
         _id : "2",
         user : "candy-2",
-        mensaje : "Mensaje #2"   
+        mensaje : "Estrella" ,
+        foto : "../img/christmas-icons/star.png"  
     }
     ,
     {
         _id : "3",
         user : "coffee",
-        mensaje : "Mensaje #3" 
+        mensaje : "Londres, Inglaterra.",
+        lat : "51.5085300",
+        lng : "-0.1257400"
     }
 ];
 
@@ -29,7 +32,7 @@ router.post("/", (req, res) => {
         mensaje : req.body.mensaje,
         user : req.body.user,
         lat: req.body.lat,
-        lng: req.body.long,
+        lng: req.body.lng,
         foto: req.body.foto
     }
 
