@@ -98,13 +98,13 @@ self.addEventListener("install", (evento) => {
 self.addEventListener("activate", (evento) => {
     const respuesta = caches.keys().then((llaves) => {
         llaves.forEach((llave) => {
-        if (llave !== CACHE_STATIC_NAME && llave.includes("static")) {
-            return caches.delete(llave);
-        }
+            if (llave !== CACHE_STATIC_NAME && llave.includes("static")) {
+                return caches.delete(llave);
+            }
 
-        if (llave !== CACHE_DYNAMIC_NAME && llave.includes("dynamic")) {
-            return caches.delete(llave);
-        }
+            if (llave !== CACHE_DYNAMIC_NAME && llave.includes("dynamic")) {
+                return caches.delete(llave);
+            }
         });
     });
 
@@ -115,10 +115,10 @@ self.addEventListener("fetch", (evento) => {
 
     let respuesta;
 
-    if(evento.request.url.includes("/api")) {
+    if (evento.request.url.includes("/api")) {
         respuesta = manejarPeticionesApi(CACHE_DYNAMIC_NAME, evento.request);
     } else {
-        
+
         respuesta = caches.match(evento.request).then((res) => {
             if (res) {
                 verificarCache(CACHE_STATIC_NAME, evento.request, APP_SHELL_INMUTABLE);
@@ -139,7 +139,7 @@ self.addEventListener("fetch", (evento) => {
 self.addEventListener("sync", evento => {
     console.log("SW: Sync");
 
-    if(evento.tag === "nuevo-mensaje"){
+    if (evento.tag === "nuevo-mensaje") {
         const respuesta = enviarMensajes();
 
         evento.waitUntil(respuesta);

@@ -1,32 +1,32 @@
 var url = window.location.href;
 var swLocation = '/proyecto-pwa-entrega/sw.js';
 
-if ( navigator.serviceWorker ) {
-    if ( url.includes('localhost') ) {
+if (navigator.serviceWorker) {
+    if (url.includes('localhost')) {
         swLocation = '/sw.js';
     }
-    navigator.serviceWorker.register( swLocation );
+    navigator.serviceWorker.register(swLocation);
 }
 
 // Referencias de jQuery
-var titulo           = $('#titulo');
+var titulo = $('#titulo');
 var tituloModalIcono = $('#titulo-modal-icono');
-var nuevoBtn         = $('#nuevo-btn');
-var salirBtn         = $("#salir-btn");
-var cancelarBtn      = $('#cancel-btn');
-var postMensajeBtn   = $('#post-mensaje-btn');
-var postFotoBtn      = $('#post-foto-btn');
-var postGeoBtn      = $('#post-geo-btn');
-var avatarSel        = $('#seleccion');
+var nuevoBtn = $('#nuevo-btn');
+var salirBtn = $("#salir-btn");
+var cancelarBtn = $('#cancel-btn');
+var postMensajeBtn = $('#post-mensaje-btn');
+var postFotoBtn = $('#post-foto-btn');
+var postGeoBtn = $('#post-geo-btn');
+var avatarSel = $('#seleccion');
 
 var timelineMensajes = $('#timeline-mensajes');
-var timelineFotos    = $('#timeline-fotos');
-var timelineGeos     = $('#timeline-geos');
+var timelineFotos = $('#timeline-fotos');
+var timelineGeos = $('#timeline-geos');
 
-var modal       = $('#modal');
+var modal = $('#modal');
 var modalAvatar = $('#modal-icono');
-var avatarBtns  = $('.seleccion-icono');
-var txtMensaje  = $('#txtMensaje');
+var avatarBtns = $('.seleccion-icono');
+var txtMensaje = $('#txtMensaje');
 
 var contenidoIconos = $("#contenido-iconos");
 // El usuario, contiene el ID del icono seleccionado
@@ -35,21 +35,21 @@ var usuario;
 //==================FUNCIONES=======================
 function crearMensajeHTML(mensaje, personaje) {
 
-    var content =`
+    var content = `
     <li class="animated fadeIn fast"
-        data-user="${ personaje }"
-        data-mensaje="${ mensaje }"
+        data-user="${personaje}"
+        data-mensaje="${mensaje}"
         data-tipo="mensaje">
 
 
         <div class="icono-mensaje">
-            <img src="../img/christmas-icons/${ personaje }.png">
+            <img src="../img/christmas-icons/${personaje}.png">
         </div>
         <div class="bubble-container">
             <div class="bubble">
-                <h3 class="texto-rojo">@${ personaje }</h3>
+                <h3 class="texto-rojo">@${personaje}</h3>
                 <br/>
-                <p class="texto-verde">${ mensaje }</p>
+                <p class="texto-verde">${mensaje}</p>
             </div>        
             <div class="arrow"></div>
         </div>
@@ -63,31 +63,31 @@ function crearMensajeHTML(mensaje, personaje) {
 
 function crearMensajeFotoHTML(mensaje, personaje, foto) {
 
-    var content =`
+    var content = `
     <li class="animated fadeIn fast"
-        data-user="${ personaje }"
-        data-mensaje="${ mensaje }"
+        data-user="${personaje}"
+        data-mensaje="${mensaje}"
         data-tipo="mensaje">
 
 
         <div class="icono-mensaje">
-            <img src="../img/christmas-icons/${ personaje }.png">
+            <img src="../img/christmas-icons/${personaje}.png">
         </div>
         <div class="bubble-container">
             <div class="bubble">
-                <h3 class="texto-rojo">@${ personaje }</h3>
+                <h3 class="texto-rojo">@${personaje}</h3>
                 <br/>
-                <p class="texto-verde">${ mensaje }</p>
+                <p class="texto-verde">${mensaje}</p>
                 `;
-    
-    if ( foto ) {
+
+    if (foto) {
         content += `
                 <br>
-                <img class="foto-mensaje" src="${ foto }" style="width: 300; height:300px;">
+                <img class="foto-mensaje" src="${foto}" style="width: 300; height:300px;">
         `;
 
     }
-        
+
     content += `</div>        
                 <div class="arrow"></div>
             </div>
@@ -101,34 +101,34 @@ function crearMensajeFotoHTML(mensaje, personaje, foto) {
 
 function crearMensajeGeoHTML(mensaje, personaje, lat, lng) {
 
-    var content =`
+    var content = `
     <li class="animated fadeIn fast"
-        data-user="${ personaje }"
-        data-mensaje="${ mensaje }"
+        data-user="${personaje}"
+        data-mensaje="${mensaje}"
         data-tipo="mensaje">
 
 
         <div class="icono-mensaje">
-            <img src="../img/christmas-icons/${ personaje }.png">
+            <img src="../img/christmas-icons/${personaje}.png">
         </div>
         <div class="bubble-container">
             <div class="bubble">
-                <h3 class="texto-rojo">@${ personaje }</h3>
+                <h3 class="texto-rojo">@${personaje}</h3>
                 <br/>
-                <p class="texto-verde">${ mensaje }</p>
+                <p class="texto-verde">${mensaje}</p>
                 </div>        
                 <div class="arrow"></div>
             </div>
         </li>
     `;
 
-    
+
     // si existe la latitud y longitud, 
     // llamamos la funcion para crear el mapa
-    if ( lat ) {
-        crearMensajeMapa( lat, lng, personaje );
+    if (lat) {
+        crearMensajeMapa(lat, lng, personaje);
     }
-    
+
     // Borramos la latitud y longitud 
     lat = null;
     lng = null;
@@ -143,9 +143,9 @@ function crearMensajeGeoHTML(mensaje, personaje, lat, lng) {
 
 
 // Globals
-function logIn( ingreso ) {
+function logIn(ingreso) {
 
-    if ( ingreso ) {
+    if (ingreso) {
         nuevoBtn.removeClass('oculto'); //Muestra botón de nuevo mensaje
         salirBtn.removeClass('oculto'); //Muestra botón de salir
         timelineMensajes.removeClass('oculto'); //Muestra los mensajes
@@ -163,14 +163,14 @@ function logIn( ingreso ) {
         contenidoIconos.removeClass('oculto'); //Muestra los iconos 
 
         titulo.text('');
-    
+
     }
 
 }
 
 
 // Seleccion de personaje
-avatarBtns.on('click', function() {
+avatarBtns.on('click', function () {
 
     usuario = $(this).data('user');
 
@@ -181,138 +181,138 @@ avatarBtns.on('click', function() {
 });
 
 // Boton de salir
-salirBtn.on('click', function() {
+salirBtn.on('click', function () {
 
     logIn(false);
 
 });
 
 // Boton de nuevo mensaje
-nuevoBtn.on('click', function() {
+nuevoBtn.on('click', function () {
     tituloModalIcono.text('@' + usuario);
     modal.removeClass('oculto');
-    modal.animate({ 
+    modal.animate({
         marginTop: '-=1000px',
         opacity: 1
-    }, 200 );
+    }, 200);
 });
 
 // Boton de cancelar mensaje
-cancelarBtn.on('click', function() {
-    if ( !modal.hasClass('oculto') ) {
-        modal.animate({ 
+cancelarBtn.on('click', function () {
+    if (!modal.hasClass('oculto')) {
+        modal.animate({
             marginTop: '+=1000px',
             opacity: 0
-         }, 200, function() {
-             modal.addClass('oculto');
-             txtMensaje.val('');
-         });
+        }, 200, function () {
+            modal.addClass('oculto');
+            txtMensaje.val('');
+        });
     }
 });
 
 
 // Boton de enviar sólo mensaje
-postMensajeBtn.on('click', function() {
+postMensajeBtn.on('click', function () {
 
     var mensaje = txtMensaje.val();
-    if ( mensaje.length === 0 ) {
+    if (mensaje.length === 0) {
         cancelarBtn.click();
         return;
     }
-    
+
     var data = {
-        user : usuario,
-        mensaje : mensaje
+        user: usuario,
+        mensaje: mensaje
     }
 
     fetch("/api", {
-        method : "POST",
-        headers : {
-            "Content-Type" : "application/json"
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
         },
-        body : JSON.stringify(data)
+        body: JSON.stringify(data)
     })
-    .then(res => res.json())
-    .then(res => console.log("Funciona: ", res))
-    .catch(error => console.log("Falla: ", error));
+        .then(res => res.json())
+        .then(res => console.log("Funciona: ", res))
+        .catch(error => console.log("Falla: ", error));
 
-    crearMensajeHTML( mensaje, usuario );
+    crearMensajeHTML(mensaje, usuario);
 
 });
 
 // Boton de enviar sólo foto
-postFotoBtn.on('click', function() {
+postFotoBtn.on('click', function () {
 
     var mensaje = txtMensaje.val();
-    if ( mensaje.length === 0 ) {
+    if (mensaje.length === 0) {
         cancelarBtn.click();
         return;
     }
-    
+
     var data = {
-        user : usuario,
-        mensaje : mensaje,
+        user: usuario,
+        mensaje: mensaje,
     }
 
     fetch("/api", {
-        method : "POST",
-        headers : {
-            "Content-Type" : "application/json"
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
         },
-        body : JSON.stringify(data)
+        body: JSON.stringify(data)
     })
-    .then(res => res.json())
-    .then(res => console.log("Funciona: ", res))
-    .catch(error => console.log("Falla: ", error));
+        .then(res => res.json())
+        .then(res => console.log("Funciona: ", res))
+        .catch(error => console.log("Falla: ", error));
 
-    crearMensajeFotoHTML( mensaje, usuario, foto );
+    crearMensajeFotoHTML(mensaje, usuario, foto);
 
 });
 
 // Boton de enviar sólo foto
-postGeoBtn.on('click', function() {
+postGeoBtn.on('click', function () {
 
     var mensaje = txtMensaje.val();
-    if ( mensaje.length === 0 ) {
+    if (mensaje.length === 0) {
         cancelarBtn.click();
         return;
     }
-    
+
     var data = {
-        user : usuario,
-        mensaje : mensaje,
+        user: usuario,
+        mensaje: mensaje,
     }
 
     fetch("/api", {
-        method : "POST",
-        headers : {
-            "Content-Type" : "application/json"
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
         },
-        body : JSON.stringify(data)
+        body: JSON.stringify(data)
     })
-    .then(res => res.json())
-    .then(res => console.log("Funciona: ", res))
-    .catch(error => console.log("Falla: ", error));
+        .then(res => res.json())
+        .then(res => console.log("Funciona: ", res))
+        .catch(error => console.log("Falla: ", error));
 
-    crearMensajeGeoHTML( mensaje, usuario, lat, lng );
+    crearMensajeGeoHTML(mensaje, usuario, lat, lng);
 
 });
 
 function listarMensajes() {
     fetch("/api")
-    .then(res => res.json())
-    .then(datos => {
-        console.log(datos);
-        datos.forEach(mensaje => {
-            if(mensaje.foto == undefined && mensaje.lat == undefined && mensaje.lng == undefined){
-                crearMensajeHTML(mensaje.mensaje, mensaje.user); //Propiedades que tiene el objeto mensajes al ser convertido a json
-            } else if (mensaje.foto != undefined){
-                crearMensajeFotoHTML(mensaje.mensaje, mensaje.user, mensaje.foto); //Propiedades que tiene el objeto mensajes al ser convertido a json
-            } else if (mensaje.lat != undefined && mensaje.lng != undefined){
-                crearMensajeGeoHTML(mensaje.mensaje, mensaje.user, mensaje.lat, mensaje.lng); //Propiedades que tiene el objeto mensajes al ser convertido a json
-            }
+        .then(res => res.json())
+        .then(datos => {
+            console.log(datos);
+            datos.forEach(mensaje => {
+                if (mensaje.foto == undefined && mensaje.lat == undefined && mensaje.lng == undefined) {
+                    crearMensajeHTML(mensaje.mensaje, mensaje.user); //Propiedades que tiene el objeto mensajes al ser convertido a json
+                } else if (mensaje.foto != undefined) {
+                    crearMensajeFotoHTML(mensaje.mensaje, mensaje.user, mensaje.foto); //Propiedades que tiene el objeto mensajes al ser convertido a json
+                } else if (mensaje.lat != undefined && mensaje.lng != undefined) {
+                    crearMensajeGeoHTML(mensaje.mensaje, mensaje.user, mensaje.lat, mensaje.lng); //Propiedades que tiene el objeto mensajes al ser convertido a json
+                }
+            });
         });
-    });
 }
 
 listarMensajes();
@@ -342,19 +342,19 @@ btnLocation.on("click", () => {
 function mostrarMapaModal(lat, lng) {
 
     $('.modal-mapa').remove();
-    
+
     var content = `
             <div class="modal-mapa">
                 <iframe
                     width="100%"
                     height="250"
                     frameborder="0"
-                    src="https://www.google.com/maps/embed/v1/view?key=${ googleMapKey }&center=${ lat },${ lng }&zoom=17" allowfullscreen>
+                    src="https://www.google.com/maps/embed/v1/view?key=${googleMapKey}&center=${lat},${lng}&zoom=17" allowfullscreen>
                     </iframe>
             </div>
     `;
 
-    modal.append( content );
+    modal.append(content);
 }
 
 function crearMensajeMapa(lat, lng, personaje) {
@@ -363,11 +363,11 @@ function crearMensajeMapa(lat, lng, personaje) {
     let content = `
     <li class="animated fadeIn fast"
         data-tipo="mapa"
-        data-user="${ personaje }"
-        data-lat="${ lat }"
-        data-lng="${ lng }">
+        data-user="${personaje}"
+        data-lat="${lat}"
+        data-lng="${lng}">
                 <div class="icono-mensaje">
-                    <img src="../img/christmas-icons/${ personaje }.png">
+                    <img src="../img/christmas-icons/${personaje}.png">
                 </div>
                 <div class="bubble-container">
                     <div class="bubble">
@@ -375,7 +375,7 @@ function crearMensajeMapa(lat, lng, personaje) {
                             width="100%"
                             height="250"
                             frameborder="0" style="border:0"
-                            src="https://www.google.com/maps/embed/v1/view?key=${ googleMapKey }&center=${ lat },${ lng }&zoom=17" allowfullscreen>
+                            src="https://www.google.com/maps/embed/v1/view?key=${googleMapKey}&center=${lat},${lng}&zoom=17" allowfullscreen>
                             </iframe>
                     </div>
                     
@@ -408,8 +408,8 @@ btnTomarFoto.on("click", () => {
 });
 
 
-function verificarConexion(){
-    if(navigator.onLine){
+function verificarConexion() {
+    if (navigator.onLine) {
         console.log("No hay conexión :(");
     } else {
         console.log("Si hay conexión :)");
