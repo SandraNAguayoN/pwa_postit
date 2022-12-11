@@ -61,6 +61,8 @@ const APP_SHELL = [
     "img/christmas-icons/snowflake.png",
     "img/christmas-icons/star.png",
     "img/christmas-icons/toy.png",
+    "img/christmas-icons/notifications/notifications-1.png",
+    "img/christmas-icons/notifications/notifications-2.png",
 
     //Scripts
     "js/app.js",
@@ -157,7 +159,7 @@ self.addEventListener('push', e => {
         body: data.cuerpo,       
         icon: `img/christmas-icons/${ data.usuario }.png`,
         badge: 'img/favicon.ico',
-        image: 'img/christmas-icons/notificaciones/notificaciones-1.png',
+        image: 'img/christmas-icons/notifications/notifications-1.png',
         vibrate: [125,75,125,275,200,275,125,75,125,275,200,600,200,600],
         openUrl: '/',
         data: {            
